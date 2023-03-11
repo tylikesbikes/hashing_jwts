@@ -5,6 +5,8 @@ const {ensureLoggedIn, ensureCorrectUser} = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = require('../config');
 const ExpressError = require('../expressError');
+const {sendTestMessage} = require('./twilio');
+const User = require('../models/user');
 
 router.get('/:id', ensureLoggedIn, async (req, res, next) => {
 /** GET /:id - get detail of message.
@@ -43,6 +45,10 @@ router.post('/', ensureLoggedIn, async (req, res, next) => {
  **/
     try {
         const newMessage = await Message.create({from_username:req.user.username, to_username:req.body.to_username, body:req.body.body})
+        const recipient = await User.get(req.body.to_username);
+        const recipPhone = recipient.user.phone;
+        
+        sendTestMessage(req.body.body, recipPhone)
         return res.json({message:newMessage});
     } catch(e) {
         next(e);

@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db');
 const User = require('../models/user');
 const {ensureLoggedIn, ensureCorrectUser} = require('../middleware/auth');
+const { sendTestMessage } = require('./twilio');
 
 router.get('/', ensureLoggedIn, async (req, res, next) => {
     /** GET / - get list of users.
@@ -66,6 +67,5 @@ try {
     next(e);
 }
 })
-
 
 module.exports = router;
