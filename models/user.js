@@ -72,12 +72,13 @@ class User {
    *          phone,
    *          join_at,
    *          last_login_at } */
+
     const results = await db.query(`SELECT username, first_name, last_name, phone, join_at, last_login_at
       FROM users WHERE username = $1`, [username]);
       if (results.rows.length === 0) {
         throw new ExpressError("Username not found", 404);
       }
-      return results.rows[0];
+      return ({user:results.rows[0]});
    }
 
 

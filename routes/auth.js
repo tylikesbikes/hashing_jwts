@@ -17,6 +17,7 @@ router.post('/login', async (req, res, next) => {
     try {
         const {username, password} = req.body;
         if (await User.authenticate(username, password)) {
+            User.updateLoginTimestamp(username);
             return res.send({token:jwt.sign({username}, SECRET_KEY)})
         } else {
             return res.status(400).json({"error":"failed to authenticate"})
